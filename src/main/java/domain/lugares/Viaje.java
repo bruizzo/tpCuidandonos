@@ -166,18 +166,17 @@ public class Viaje {
     }
 
     public void finalizar(){
+        this.notificador.cambiarEstrategia(new NotificacionFinViaje()); // Seteamos al notificador en modo fin de viaje
+        this.cuidadoresAceptados.forEach(c -> this.notificador.notificar(c)); // Notificamos a los cuidadores del fin
+        this.cronometro.detener(); // Detenemos el cronometro
 
         if(!this.esUltimaParada(this.paradaActual)) {
-            this.cronometro.detener(); // Detenemos el cronometro
             this.cronometro.reiniciar(); // Reiniciamos el cronometro a cero
             this.comenzar(this.paradaActual, this.destino.get(this.destino.indexOf(paradaActual) + 1)); // Iniciamos el viaje hacia la proxima parada
         }
         else{
             this.cambiarEstado(new ViajeFinalizado(this));// Seteamos el estado del viaje a FINALIZADO
-            this.cronometro.detener(); // Detenemos el cronometro
             this.transeunte.cambiarModoUsuario(ModoUsuario.PASIVO); // Pasamos al usuario al modo PASIVO
-            this.notificador.cambiarEstrategia(new NotificacionFinViaje()); // Seteamos al notificador en modo fin de viaje
-            this.cuidadoresAceptados.forEach(c -> this.notificador.notificar(c)); // Notificamos a los cuidadores del fin
         }
         return;
     }

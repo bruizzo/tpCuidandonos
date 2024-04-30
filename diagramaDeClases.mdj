@@ -238,7 +238,7 @@
 											"top": 464,
 											"width": 272.31787109375,
 											"height": 13,
-											"text": "-modoAlerta: ModoAlerta",
+											"text": "-modoAlerta: IModoAlerta",
 											"horizontalAlignment": 0
 										}
 									],
@@ -306,7 +306,7 @@
 											"top": 517,
 											"width": 272.31787109375,
 											"height": 13,
-											"text": "+cambiarModoAlerta(unModo: ModoAlerta)",
+											"text": "+cambiarModoAlerta(unModo: IModoAlerta)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -605,7 +605,7 @@
 											"top": 456,
 											"width": 441.47021484375,
 											"height": 13,
-											"text": "-estado: EstadoViaje",
+											"text": "-estado",
 											"horizontalAlignment": 0
 										},
 										{
@@ -724,7 +724,7 @@
 											"top": 554,
 											"width": 441.47021484375,
 											"height": 13,
-											"text": "+cambiarEstado(unEstado: EstadoViaje)",
+											"text": "+cambiarEstado(unEstado)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10194,7 +10194,9 @@
 							},
 							"name": "modoAlerta",
 							"visibility": "private",
-							"type": "ModoAlerta"
+							"type": {
+								"$ref": "AAAAAAGPJuYFeen3S9E="
+							}
 						}
 					],
 					"operations": [
@@ -10255,7 +10257,9 @@
 										"$ref": "AAAAAAGPJchnmsBsulU="
 									},
 									"name": "unModo",
-									"type": "ModoAlerta"
+									"type": {
+										"$ref": "AAAAAAGPJuYFeen3S9E="
+									}
 								}
 							]
 						},
@@ -10477,10 +10481,7 @@
 								"$ref": "AAAAAAGPIxbiOr5EaHI="
 							},
 							"name": "estado",
-							"visibility": "private",
-							"type": {
-								"$ref": "AAAAAAGPJvgY1YqEY20="
-							}
+							"visibility": "private"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -10552,10 +10553,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPJvmaTZ17Acg="
 									},
-									"name": "unEstado",
-									"type": {
-										"$ref": "AAAAAAGPJvgY1YqEY20="
-									}
+									"name": "unEstado"
 								}
 							]
 						},
