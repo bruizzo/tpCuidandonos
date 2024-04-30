@@ -147,21 +147,6 @@ public class Viaje {
     public void comenzar(Ubicacion desde, Parada hasta){
 
         this.estado.comenzar(desde, hasta);
-
-        /*
-        if(this.estado == EstadoViaje.PENDIENTE) {
-            this.cambiarEstado(EstadoViaje.EN_CURSO); // En nuestro diseño, los viajes no iniciados tienen estado PENDIENTE
-            this.notificador.cambiarEstrategia(new NotificacionInicioViaje()); // Seteamos al notificador en modo inicio de viaje
-            this.cuidadoresAceptados.forEach(c -> this.notificador.notificar(c)); // Notificamos a los cuidadores del inicio
-            this.transeunte.cambiarModoUsuario(ModoUsuario.ACTIVO);  // Pasamos al usuario al modo ACTIVO
-            this.paradaActual = this.destino.get(0);
-        }
-        this.cronometro.iniciar(); // Iniciamos el cronometro
-        this.demoraAprox = this.adapterDistancia.calcularDemoraAprox(desde, hasta); // Calculamos la demora aproximada con la API de Google
-        this.distancia = this.adapterDistancia.calcularDistancia(desde, hasta); // Calculamos la distancia con la API de Google
-        this.cronometro.seAlcanzoDemoraMax(this); // Empezamos a controlar que no superemos la demora calculada
-         */
-
         return;
     }
 
