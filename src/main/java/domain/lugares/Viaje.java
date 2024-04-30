@@ -3,6 +3,7 @@ package domain.lugares;
 import domain.adapters.IAdapterDistancia;
 import domain.notifaciones.NotificacionFinViaje;
 import domain.notifaciones.NotificacionInicioViaje;
+import domain.notifaciones.NotificacionSolicitudViaje;
 import domain.notifaciones.Notificador;
 import domain.personas.ModoUsuario;
 import domain.personas.Persona;
@@ -12,11 +13,9 @@ import java.util.List;
 
 public class Viaje {
 
-    private Parada origen;
+    private Ubicacion origen;
     private List<Parada> destino;
     private Parada paradaActual;
-    // private Parada paradaDesde;
-    // private Parada paradaHasta;
     private Persona transeunte;
     private List<Persona> cuidadoresSolicitados;
     private List<Persona> cuidadoresAceptados;
@@ -27,7 +26,89 @@ public class Viaje {
     private Integer distancia;
     private Notificador notificador;
 
+    public Ubicacion getOrigen() {
+        return origen;
+    }
 
+    public void setOrigen(Ubicacion origen) {
+        this.origen = origen;
+    }
+
+    public List<Parada> getDestino() {
+        return destino;
+    }
+
+    public void setDestino(List<Parada> destino) {
+        this.destino = destino;
+    }
+
+    public Parada getParadaActual() {
+        return paradaActual;
+    }
+
+    public void setParadaActual(Parada paradaActual) {
+        this.paradaActual = paradaActual;
+    }
+
+    public Persona getTranseunte() {
+        return transeunte;
+    }
+
+    public void setTranseunte(Persona transeunte) {
+        this.transeunte = transeunte;
+    }
+
+    public void setCuidadoresSolicitados(List<Persona> cuidadoresSolicitados) {
+        this.cuidadoresSolicitados = cuidadoresSolicitados;
+    }
+
+    public void setCuidadoresAceptados(List<Persona> cuidadoresAceptados) {
+        this.cuidadoresAceptados = cuidadoresAceptados;
+    }
+
+    public EstadoViaje getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoViaje estado) {
+        this.estado = estado;
+    }
+
+    public Cronometro getCronometro() {
+        return cronometro;
+    }
+
+    public void setCronometro(Cronometro cronometro) {
+        this.cronometro = cronometro;
+    }
+
+    public IAdapterDistancia getAdapterDistancia() {
+        return adapterDistancia;
+    }
+
+    public void setAdapterDistancia(IAdapterDistancia adapterDistancia) {
+        this.adapterDistancia = adapterDistancia;
+    }
+
+    public void setDemoraAprox(Integer demoraAprox) {
+        this.demoraAprox = demoraAprox;
+    }
+
+    public Integer getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(Integer distancia) {
+        this.distancia = distancia;
+    }
+
+    public Notificador getNotificador() {
+        return notificador;
+    }
+
+    public void setNotificador(Notificador notificador) {
+        this.notificador = notificador;
+    }
 
     public Integer getDemoraAprox() {
         return demoraAprox;
@@ -48,6 +129,8 @@ public class Viaje {
 
     public void agregarCuidadorSolicitado(Persona unCuidador){
         this.cuidadoresSolicitados.add(unCuidador);
+        this.notificador.cambiarEstrategia(new NotificacionSolicitudViaje());
+        this.notificador.notificar(unCuidador);
         return;
     }
 
@@ -61,52 +144,36 @@ public class Viaje {
         return;
     }
 
-    public void comenzar(Ubicacion desde, Ubicacion hasta){
+    public void comenzar(Ubicacion desde, Parada hasta){
 
+        this.estado.comenzar(desde, hasta);
+
+        /*
         if(this.estado == EstadoViaje.PENDIENTE) {
             this.cambiarEstado(EstadoViaje.EN_CURSO); // En nuestro diseño, los viajes no iniciados tienen estado PENDIENTE
             this.notificador.cambiarEstrategia(new NotificacionInicioViaje()); // Seteamos al notificador en modo inicio de viaje
             this.cuidadoresAceptados.forEach(c -> this.notificador.notificar(c)); // Notificamos a los cuidadores del inicio
             this.transeunte.cambiarModoUsuario(ModoUsuario.ACTIVO);  // Pasamos al usuario al modo ACTIVO
-
-            // this.paradaDesde = this.origen;
-            // this.paradaHasta = this.destino.get(0);
-            // this.paradaActual = this.destino.get(0);
-        }
-
-        if(this.tieneParadas()){
-            this.realizarViajeConParadas();
-        } else {
-
+            this.paradaActual = this.destino.get(0);
         }
         this.cronometro.iniciar(); // Iniciamos el cronometro
         this.demoraAprox = this.adapterDistancia.calcularDemoraAprox(desde, hasta); // Calculamos la demora aproximada con la API de Google
         this.distancia = this.adapterDistancia.calcularDistancia(desde, hasta); // Calculamos la distancia con la API de Google
         this.cronometro.seAlcanzoDemoraMax(this); // Empezamos a controlar que no superemos la demora calculada
-        return;
-    }
+         */
 
-    public Boolean tieneParadas(){
-        //TODO
-        return true;
-    }
-
-    public void realizarViajeConParadas(){
-        //TODO
         return;
     }
 
     public void finalizar(){
 
-        // this.paradaActual = ALGO
-
         if(!this.esUltimaParada(this.paradaActual)) {
-            this.cronometro.reiniciar();
-            this.comenzar(this.paradaActual, this.destino.get(this.destino.indexOf(paradaActual) + 1));
+            this.cronometro.detener(); // Detenemos el cronometro
+            this.cronometro.reiniciar(); // Reiniciamos el cronometro a cero
+            this.comenzar(this.paradaActual, this.destino.get(this.destino.indexOf(paradaActual) + 1)); // Iniciamos el viaje hacia la proxima parada
         }
-        // [0 ; 1 ; 2]
         else{
-            this.estado = EstadoViaje.FINALIZADO; // Seteamos el estado del viaje a FINALIZADO
+            this.cambiarEstado(new ViajeFinalizado(this));// Seteamos el estado del viaje a FINALIZADO
             this.cronometro.detener(); // Detenemos el cronometro
             this.transeunte.cambiarModoUsuario(ModoUsuario.PASIVO); // Pasamos al usuario al modo PASIVO
             this.notificador.cambiarEstrategia(new NotificacionFinViaje()); // Seteamos al notificador en modo fin de viaje
